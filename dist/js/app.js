@@ -6,10 +6,10 @@
 
   Client = (function() {
     function Client() {
-      var host, socket, _ref,
+      var host, socket,
         _this = this;
 
-      host = (typeof process !== "undefined" && process !== null ? (_ref = process.env) != null ? _ref.HOST : void 0 : void 0) || 'localhost';
+      host = 'node-tron.herokuapp.com';
       socket = io.connect(host);
       socket.on('init', function(data) {
         var canvas;

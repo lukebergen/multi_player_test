@@ -6,7 +6,8 @@ class Client
     # socket.on 'syncData', (data) ->
     #   game.syncTo(data)
 
-    host = process?.env?.HOST || 'localhost'
+    # host = 'localhost'
+    host = 'node-tron.herokuapp.com'
     socket = io.connect(host)
 
     socket.on 'init', (data) =>
