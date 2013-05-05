@@ -7,7 +7,9 @@ class Client
     #   game.syncTo(data)
 
     # host = 'localhost'
-    host = 'node-tron.herokuapp.com'
+    # host = 'node-tron.herokuapp.com'
+    host = 'vps.xoriff.com'
+
     socket = io.connect(host)
 
     socket.on 'init', (data) =>
