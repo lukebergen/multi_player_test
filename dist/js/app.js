@@ -9,7 +9,7 @@
       var socket,
         _this = this;
 
-      socket = io.connect('localhost');
+      socket = io.connect('vps.xoriff.com');
       socket.on('init', function(data) {
         var canvas;
 
