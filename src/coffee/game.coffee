@@ -1,6 +1,6 @@
 class @Game
   constructor: (initialData = {}) ->
-    @ticks = 0
+    @ticks = initialData.ticks || 0
     @keys = initialData.keys || {}
     @players = initialData.players || []
     setInterval(@update, 16.7)

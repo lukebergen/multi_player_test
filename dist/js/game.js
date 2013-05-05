@@ -15,7 +15,7 @@
       this.keyUp = __bind(this.keyUp, this);
       this.keyDown = __bind(this.keyDown, this);
       this.update = __bind(this.update, this);
-      this.ticks = 0;
+      this.ticks = initialData.ticks || 0;
       this.keys = initialData.keys || {};
       this.players = initialData.players || [];
       setInterval(this.update, 16.7);
