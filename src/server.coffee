@@ -6,7 +6,8 @@ app.configure ->
   app.use(express.bodyParser())
   app.use(express.static(__dirname + '/'))
 
-server = app.listen 8080
+# server = app.listen 8080
+server = app.listen 80
 console.log "server started on 8080"
 
 io = require('socket.io').listen(server)
