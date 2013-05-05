@@ -7,8 +7,9 @@ app.configure ->
   app.use(express.static(__dirname + '/'))
 
 # server = app.listen 8080
-server = app.listen 80
-console.log "server started on 8080"
+port = process?.env?.PORT || 8080
+server = app.listen port
+console.log "server started on #{port}"
 
 io = require('socket.io').listen(server)
 io.set 'log level', 1

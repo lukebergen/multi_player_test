@@ -6,7 +6,8 @@ class Client
     # socket.on 'syncData', (data) ->
     #   game.syncTo(data)
 
-    socket = io.connect('vps.xoriff.com')
+    host = process?.env?.HOST || 'localhost'
+    socket = io.connect(host)
 
     socket.on 'init', (data) =>
       @game = new Game(data)

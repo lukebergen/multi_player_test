@@ -6,10 +6,11 @@
 
   Client = (function() {
     function Client() {
-      var socket,
+      var host, socket, _ref,
         _this = this;
 
-      socket = io.connect('vps.xoriff.com');
+      host = (typeof process !== "undefined" && process !== null ? (_ref = process.env) != null ? _ref.HOST : void 0 : void 0) || 'localhost';
+      socket = io.connect(host);
       socket.on('init', function(data) {
         var canvas;
 
