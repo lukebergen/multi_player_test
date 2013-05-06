@@ -5,7 +5,7 @@
       var host, socket,
         _this = this;
 
-      host = 'node-tron.herokuapp.com';
+      host = 'vps.xoriff.com';
       socket = io.connect(host);
       socket.on('init', function(data) {
         var canvas;
