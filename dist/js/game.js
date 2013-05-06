@@ -4,6 +4,8 @@
 
   this.Game = (function() {
     function Game(initialData) {
+      var newP, player, _i, _len, _ref;
+
       if (initialData == null) {
         initialData = {};
       }
@@ -18,7 +20,14 @@
       this.update = __bind(this.update, this);
       this.ticks = initialData.ticks || 0;
       this.keys = initialData.keys || {};
-      this.players = initialData.players || [];
+      this.players = [];
+      _ref = initialData.players || [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        player = _ref[_i];
+        newP = new Player();
+        newP.syncTo(player);
+        this.players.push(newP);
+      }
       setInterval(this.update, 16.7);
       this;
     }

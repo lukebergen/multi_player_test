@@ -32,7 +32,7 @@
 
   setInterval(function() {
     return io.sockets.emit('syncTo', game);
-  }, 200);
+  }, 500);
 
   socketPlayerMap = {};
 

@@ -21,7 +21,7 @@ game = new g.Game()
 
 setInterval ->
   io.sockets.emit 'syncTo', game
-, 200
+, 500
 
 socketPlayerMap = {}
 

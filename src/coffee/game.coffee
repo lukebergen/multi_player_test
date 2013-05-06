@@ -2,7 +2,11 @@ class @Game
   constructor: (initialData = {}) ->
     @ticks = initialData.ticks || 0
     @keys = initialData.keys || {}
-    @players = initialData.players || []
+    @players = []
+    for player in (initialData.players || [])
+      newP = new Player()
+      newP.syncTo(player)
+      @players.push(newP)
     setInterval(@update, 16.7)
     @
 
