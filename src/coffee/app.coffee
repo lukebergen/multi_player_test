@@ -1,6 +1,4 @@
-@App = {}
-
-class Client
+class @Client
   constructor: ->
 
     # socket.on 'syncData', (data) ->
@@ -15,7 +13,7 @@ class Client
     socket.on 'init', (data) =>
       @game = new Game(data)
       canvas = $("#gameCanvas")[0]
-      @renderer = new App.Renderer(canvas, @game)
+      @renderer = new Client.Renderer(canvas, @game)
       socket.emit 'playerJoin'
 
     socket.on 'newPlayer', (player) =>

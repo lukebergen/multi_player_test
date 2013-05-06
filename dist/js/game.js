@@ -54,7 +54,7 @@
 
     Game.prototype.keyUp = function(playerId, keyCode) {
       if (keyCode === 68) {
-        console.log("ticks: ", this.ticks);
+        this.getPlayer(playerId).speed = 4;
       }
       return this.keys[playerId][keyCode] = false;
     };

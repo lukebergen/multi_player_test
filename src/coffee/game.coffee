@@ -23,7 +23,7 @@ class @Game
 
   keyUp: (playerId, keyCode) =>
     if (keyCode == 68)
-      console.log("ticks: ", @ticks)
+      @getPlayer(playerId).speed = 4
     @keys[playerId][keyCode] = false
 
   isKeyDown: (playerId, keyCode) =>

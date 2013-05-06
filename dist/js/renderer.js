@@ -2,7 +2,7 @@
 (function() {
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
-  App.Renderer = (function() {
+  Client.Renderer = (function() {
     function Renderer(canvas, game) {
       this.draw = __bind(this.draw, this);      this.canvas = canvas;
       this.ctx = this.canvas.getContext("2d");

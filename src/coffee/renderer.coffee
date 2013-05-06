@@ -1,4 +1,4 @@
-class App.Renderer
+class Client.Renderer
   constructor: (canvas, game) ->
     @canvas = canvas
     @ctx = @canvas.getContext("2d")
