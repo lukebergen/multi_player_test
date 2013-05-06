@@ -4,8 +4,8 @@ class @Client
     # socket.on 'syncData', (data) ->
     #   game.syncTo(data)
 
-    host = 'localhost'
-    # host = 'node-tron.herokuapp.com'
+    # host = 'localhost'
+    host = 'node-tron.herokuapp.com'
     # host = 'vps.xoriff.com'
 
     socket = io.connect(host)
