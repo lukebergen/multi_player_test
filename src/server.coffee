@@ -19,6 +19,10 @@ p = require './js/player'
 
 game = new g.Game()
 
+setInterval ->
+  io.sockets.emit 'syncTo', game
+, 200
+
 socketPlayerMap = {}
 
 io.sockets.on 'connection', (socket) =>

@@ -11,6 +11,7 @@
       this.getPlayer = __bind(this.getPlayer, this);
       this.dropPlayer = __bind(this.dropPlayer, this);
       this.addPlayer = __bind(this.addPlayer, this);
+      this.syncTo = __bind(this.syncTo, this);
       this.isKeyDown = __bind(this.isKeyDown, this);
       this.keyUp = __bind(this.keyUp, this);
       this.keyDown = __bind(this.keyDown, this);
@@ -54,13 +55,28 @@
 
     Game.prototype.keyUp = function(playerId, keyCode) {
       if (keyCode === 68) {
-        this.getPlayer(playerId).speed = 4;
+        if (typeof this.cheat === "function") {
+          this.cheat();
+        }
       }
       return this.keys[playerId][keyCode] = false;
     };
 
     Game.prototype.isKeyDown = function(playerId, keyCode) {
       return this.keys[playerId][keyCode];
+    };
+
+    Game.prototype.syncTo = function(otherGame) {
+      var myPlayer, otherPlayer, _i, _len, _ref;
+
+      _ref = otherGame.players;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        otherPlayer = _ref[_i];
+        myPlayer = this.getPlayer(otherPlayer.id);
+        myPlayer.syncTo(otherPlayer);
+      }
+      this.ticks = otherGame.ticks;
+      return this.keys = otherGame.keys;
     };
 
     Game.prototype.addPlayer = function(player) {

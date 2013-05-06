@@ -30,6 +30,10 @@
 
   game = new g.Game();
 
+  setInterval(function() {
+    return io.sockets.emit('syncTo', game);
+  }, 200);
+
   socketPlayerMap = {};
 
   io.sockets.on('connection', function(socket) {

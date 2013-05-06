@@ -23,11 +23,18 @@ class @Game
 
   keyUp: (playerId, keyCode) =>
     if (keyCode == 68)
-      @getPlayer(playerId).speed = 4
+      @cheat?()
     @keys[playerId][keyCode] = false
 
   isKeyDown: (playerId, keyCode) =>
     @keys[playerId][keyCode]
+
+  syncTo: (otherGame) =>
+    for otherPlayer in otherGame.players
+      myPlayer = @getPlayer(otherPlayer.id)
+      myPlayer.syncTo(otherPlayer)
+    @ticks = otherGame.ticks
+    @keys = otherGame.keys
 
   addPlayer: (player) =>
     @players.push(player)
