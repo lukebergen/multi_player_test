@@ -4,9 +4,9 @@ class @Client
     # socket.on 'syncData', (data) ->
     #   game.syncTo(data)
 
-    # host = 'localhost'
+    host = 'localhost'
     # host = 'node-tron.herokuapp.com'
-    host = 'vps.xoriff.com'
+    # host = 'vps.xoriff.com'
 
     socket = io.connect(host)
 
@@ -15,6 +15,9 @@ class @Client
       @game.cheat = ->
         @players[0].speed = 4
       canvas = $("#gameCanvas")[0]
+      canvas.height = GAME_HEIGHT
+      canvas.width = GAME_WIDTH
+      $("#loading").hide()
       @renderer = new Client.Renderer(canvas, @game)
       socket.emit 'playerJoin'
 
@@ -50,7 +53,7 @@ class @Client
     $(window).keyup (e) =>
       e.preventDefault()
       # only trigger a new event if the key is currently down
-      if @game.isKeyDown(@player.id, e.keyCode)
+      if @player? && @game.isKeyDown(@player.id, e.keyCode)
         @game.keyUp(@player.id, e.keyCode)
         socket.emit "keyUp",
           playerId: @player.id

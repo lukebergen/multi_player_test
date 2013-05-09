@@ -5,7 +5,7 @@
       var host, socket,
         _this = this;
 
-      host = 'vps.xoriff.com';
+      host = 'localhost';
       socket = io.connect(host);
       socket.on('init', function(data) {
         var canvas;
@@ -15,6 +15,9 @@
           return this.players[0].speed = 4;
         };
         canvas = $("#gameCanvas")[0];
+        canvas.height = GAME_HEIGHT;
+        canvas.width = GAME_WIDTH;
+        $("#loading").hide();
         _this.renderer = new Client.Renderer(canvas, _this.game);
         return socket.emit('playerJoin');
       });
@@ -52,7 +55,7 @@
       });
       $(window).keyup(function(e) {
         e.preventDefault();
-        if (_this.game.isKeyDown(_this.player.id, e.keyCode)) {
+        if ((_this.player != null) && _this.game.isKeyDown(_this.player.id, e.keyCode)) {
           _this.game.keyUp(_this.player.id, e.keyCode);
           return socket.emit("keyUp", {
             playerId: _this.player.id,

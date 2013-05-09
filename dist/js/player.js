@@ -4,13 +4,74 @@
 
   this.Player = (function() {
     function Player() {
-      this.syncTo = __bind(this.syncTo, this);      this.id = this.randId();
-      this.x = 0;
-      this.y = 0;
+      this.syncTo = __bind(this.syncTo, this);
+      this.updateLocation = __bind(this.updateLocation, this);
+      this.keyUp = __bind(this.keyUp, this);
+      this.keyDown = __bind(this.keyDown, this);
+      this.handleInput = __bind(this.handleInput, this);
+      this.update = __bind(this.update, this);      this.id = this.randId();
+      this.x = Math.random() * GAME_WIDTH;
+      this.y = Math.random() * GAME_HEIGHT;
+      this.dir = Math.floor(Math.random() * 4);
       this.width = 10;
-      this.height = 20;
+      this.height = 10;
       this.speed = 1.0;
+      this.keys = {};
+      this.turnPoints = [[this.x, this.y]];
+      this.color = this.randColor();
     }
+
+    Player.prototype.update = function(game) {
+      this.handleInput();
+      return this.updateLocation();
+    };
+
+    Player.prototype.handleInput = function() {
+      if (this.keys[37]) {
+        if (this.dir === UP || this.dir === DOWN) {
+          this.dir = LEFT;
+        }
+        this.turnPoints.push([this.x, this.y]);
+      }
+      if (this.keys[39]) {
+        if (this.dir === UP || this.dir === DOWN) {
+          this.dir = RIGHT;
+        }
+        this.turnPoints.push([this.x, this.y]);
+      }
+      if (this.keys[38]) {
+        if (this.dir === LEFT || this.dir === RIGHT) {
+          this.dir = UP;
+        }
+        this.turnPoints.push([this.x, this.y]);
+      }
+      if (this.keys[40]) {
+        if (this.dir === LEFT || this.dir === RIGHT) {
+          this.dir = DOWN;
+        }
+        return this.turnPoints.push([this.x, this.y]);
+      }
+    };
+
+    Player.prototype.keyDown = function(code) {
+      return this.keys[code] = true;
+    };
+
+    Player.prototype.keyUp = function(code) {
+      return this.keys[code] = false;
+    };
+
+    Player.prototype.updateLocation = function() {
+      if (this.dir === UP) {
+        return this.y -= this.speed;
+      } else if (this.dir === RIGHT) {
+        return this.x += this.speed;
+      } else if (this.dir === DOWN) {
+        return this.y += this.speed;
+      } else {
+        return this.x -= this.speed;
+      }
+    };
 
     Player.prototype.syncTo = function(other) {
       this.id = other.id;
@@ -18,11 +79,20 @@
       this.y = other.y;
       this.width = other.width;
       this.height = other.height;
-      return this.speed = other.speed;
+      this.speed = other.speed;
+      this.keys = other.keys;
+      return this.turnPoints = other.turnPoints;
     };
 
     Player.prototype.randId = function() {
       return Math.random().toString(36).substr(2, 16);
+    };
+
+    Player.prototype.randColor = function() {
+      var str;
+
+      str = "rgb(" + (Math.round(Math.random() * 256)) + ", " + (Math.round(Math.random() * 256)) + ", " + (Math.round(Math.random() * 256)) + ")";
+      return str;
     };
 
     return Player;

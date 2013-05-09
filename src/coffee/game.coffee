@@ -1,5 +1,13 @@
 class @Game
   constructor: (initialData = {}) ->
+    g = if exports? then global else window
+    g.UP = 0
+    g.RIGHT = 1
+    g.DOWN = 2
+    g.LEFT = 3
+    g.GAME_WIDTH = 600
+    g.GAME_HEIGHT = 600
+
     @ticks = initialData.ticks || 0
     @keys = initialData.keys || {}
     @players = []
@@ -7,38 +15,38 @@ class @Game
       newP = new Player()
       newP.syncTo(player)
       @players.push(newP)
-    setInterval(@update, 16.7)
+    setInterval(@update, 16)
     @
 
   update: =>
+    startTime = Date.now()
     @ticks++
     for player in @players
-      if @keys[player.id][37]
-        player.x -= player.speed
-      if @keys[player.id][39]
-        player.x += player.speed
-      if @keys[player.id][38]
-        player.y -= player.speed
-      if @keys[player.id][40]
-        player.y += player.speed
+      player.update(@)
+    del = Date.now() - startTime
+    if (del > 15)
+      console.log("slow tick: #{@ticks}")
 
   keyDown: (playerId, keyCode) =>
-    @keys[playerId][keyCode] = true
+    @getPlayer(playerId).keyDown(keyCode)
 
   keyUp: (playerId, keyCode) =>
     if (keyCode == 68)
       @cheat?()
-    @keys[playerId][keyCode] = false
+    @getPlayer(playerId).keyUp(keyCode)
 
   isKeyDown: (playerId, keyCode) =>
-    @keys[playerId][keyCode]
+    @getPlayer(playerId)?.keys?[keyCode] || false
 
   syncTo: (otherGame) =>
-    for otherPlayer in otherGame.players
-      myPlayer = @getPlayer(otherPlayer.id)
-      myPlayer.syncTo(otherPlayer)
-    @ticks = otherGame.ticks
-    @keys = otherGame.keys
+    # so... this is broken
+    # need to re-think this
+    # for otherPlayer in otherGame.players
+    #   myPlayer = @getPlayer(otherPlayer.id)
+    #   myPlayer.syncTo(otherPlayer)
+    # tickDiffs = otherGame.ticks - @ticks
+    # @ticks = otherGame.ticks
+    # @keys = otherGame.keys
 
   addPlayer: (player) =>
     @players.push(player)

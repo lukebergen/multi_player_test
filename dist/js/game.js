@@ -4,7 +4,7 @@
 
   this.Game = (function() {
     function Game(initialData) {
-      var newP, player, _i, _len, _ref;
+      var g, newP, player, _i, _len, _ref;
 
       if (initialData == null) {
         initialData = {};
@@ -18,6 +18,13 @@
       this.keyUp = __bind(this.keyUp, this);
       this.keyDown = __bind(this.keyDown, this);
       this.update = __bind(this.update, this);
+      g = typeof exports !== "undefined" && exports !== null ? global : window;
+      g.UP = 0;
+      g.RIGHT = 1;
+      g.DOWN = 2;
+      g.LEFT = 3;
+      g.GAME_WIDTH = 600;
+      g.GAME_HEIGHT = 600;
       this.ticks = initialData.ticks || 0;
       this.keys = initialData.keys || {};
       this.players = [];
@@ -28,38 +35,28 @@
         newP.syncTo(player);
         this.players.push(newP);
       }
-      setInterval(this.update, 16.7);
+      setInterval(this.update, 16);
       this;
     }
 
     Game.prototype.update = function() {
-      var player, _i, _len, _ref, _results;
+      var del, player, startTime, _i, _len, _ref;
 
+      startTime = Date.now();
       this.ticks++;
       _ref = this.players;
-      _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         player = _ref[_i];
-        if (this.keys[player.id][37]) {
-          player.x -= player.speed;
-        }
-        if (this.keys[player.id][39]) {
-          player.x += player.speed;
-        }
-        if (this.keys[player.id][38]) {
-          player.y -= player.speed;
-        }
-        if (this.keys[player.id][40]) {
-          _results.push(player.y += player.speed);
-        } else {
-          _results.push(void 0);
-        }
+        player.update(this);
       }
-      return _results;
+      del = Date.now() - startTime;
+      if (del > 15) {
+        return console.log("slow tick: " + this.ticks);
+      }
     };
 
     Game.prototype.keyDown = function(playerId, keyCode) {
-      return this.keys[playerId][keyCode] = true;
+      return this.getPlayer(playerId).keyDown(keyCode);
     };
 
     Game.prototype.keyUp = function(playerId, keyCode) {
@@ -68,25 +65,16 @@
           this.cheat();
         }
       }
-      return this.keys[playerId][keyCode] = false;
+      return this.getPlayer(playerId).keyUp(keyCode);
     };
 
     Game.prototype.isKeyDown = function(playerId, keyCode) {
-      return this.keys[playerId][keyCode];
+      var _ref, _ref1;
+
+      return ((_ref = this.getPlayer(playerId)) != null ? (_ref1 = _ref.keys) != null ? _ref1[keyCode] : void 0 : void 0) || false;
     };
 
-    Game.prototype.syncTo = function(otherGame) {
-      var myPlayer, otherPlayer, _i, _len, _ref;
-
-      _ref = otherGame.players;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        otherPlayer = _ref[_i];
-        myPlayer = this.getPlayer(otherPlayer.id);
-        myPlayer.syncTo(otherPlayer);
-      }
-      this.ticks = otherGame.ticks;
-      return this.keys = otherGame.keys;
-    };
+    Game.prototype.syncTo = function(otherGame) {};
 
     Game.prototype.addPlayer = function(player) {
       this.players.push(player);
