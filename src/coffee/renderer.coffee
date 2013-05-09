@@ -7,10 +7,14 @@ class Client.Renderer
     @
 
   draw: =>
+    s = Date.now()
     @ctx.fillStyle = "rgb(0, 0, 0)"
     @ctx.fillRect(0, 0, @canvas.width, @canvas.height)
     for id, player of @game.players
       @drawObject("Player", player)
+    e = Date.now()
+    if (s - e > 15)
+      console.log("slow draw")
     @
 
   drawObject: (type, obj) ->

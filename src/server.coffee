@@ -32,8 +32,9 @@ io.sockets.on 'connection', (socket) =>
   socket.on 'keyUp', (data) ->
     io.sockets.emit 'keyUp', data
     game.keyUp(data.playerId, data.keyCode)
-  socket.on 'playerJoin', ->
+  socket.on 'playerJoin', (data) ->
     player = new p.Player()
+    player.name = data.name
     console.log("adding new player: ", player.id)
     socketPlayerMap[socket.id] = player.id
     game.addPlayer(player)

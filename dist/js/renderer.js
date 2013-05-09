@@ -12,14 +12,19 @@
     }
 
     Renderer.prototype.draw = function() {
-      var id, player, _ref;
+      var e, id, player, s, _ref;
 
+      s = Date.now();
       this.ctx.fillStyle = "rgb(0, 0, 0)";
       this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
       _ref = this.game.players;
       for (id in _ref) {
         player = _ref[id];
         this.drawObject("Player", player);
+      }
+      e = Date.now();
+      if (s - e > 15) {
+        console.log("slow draw");
       }
       return this;
     };

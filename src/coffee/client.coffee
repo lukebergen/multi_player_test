@@ -12,14 +12,33 @@ class @Client
 
     socket.on 'init', (data) =>
       @game = new Game(data)
-      @game.cheat = ->
-        @players[0].speed = 4
       canvas = $("#gameCanvas")[0]
       canvas.height = GAME_HEIGHT
       canvas.width = GAME_WIDTH
       $("#loading").hide()
       @renderer = new Client.Renderer(canvas, @game)
-      socket.emit 'playerJoin'
+
+      $("#gameCanvas").on 'keydown', (e) =>
+        e.preventDefault()
+        # only trigger a new event if the key isn't already down
+        if @player? && not @game.isKeyDown(@player.id, e.keyCode)
+          @game.keyDown(@player.id, e.keyCode)
+          socket.emit "keyDown",
+            playerId: @player.id
+            keyCode: e.keyCode
+
+      $("#gameCanvas").on 'keyup', (e) =>
+        e.preventDefault()
+        # only trigger a new event if the key is currently down
+        if @player? && @game.isKeyDown(@player.id, e.keyCode)
+          @game.keyUp(@player.id, e.keyCode)
+          socket.emit "keyUp",
+            playerId: @player.id
+            keyCode: e.keyCode
+
+      $("#joinGame").click ->
+        socket.emit 'playerJoin',
+          name: $("#playerName")[0].value
 
     socket.on 'newPlayer', (player) =>
       newP = new Player()
@@ -40,24 +59,6 @@ class @Client
 
     socket.on 'keyUp', (data) =>
       @game.keyUp(data.playerId, data.keyCode)
-
-    $(window).keydown (e) =>
-      e.preventDefault()
-      # only trigger a new event if the key isn't already down
-      unless @game.isKeyDown(@player.id, e.keyCode)
-        @game.keyDown(@player.id, e.keyCode)
-        socket.emit "keyDown",
-          playerId: @player.id
-          keyCode: e.keyCode
-
-    $(window).keyup (e) =>
-      e.preventDefault()
-      # only trigger a new event if the key is currently down
-      if @player? && @game.isKeyDown(@player.id, e.keyCode)
-        @game.keyUp(@player.id, e.keyCode)
-        socket.emit "keyUp",
-          playerId: @player.id
-          keyCode: e.keyCode
 
 $ ->
   window.client = new Client()

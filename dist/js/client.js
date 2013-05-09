@@ -11,15 +11,37 @@
         var canvas;
 
         _this.game = new Game(data);
-        _this.game.cheat = function() {
-          return this.players[0].speed = 4;
-        };
         canvas = $("#gameCanvas")[0];
         canvas.height = GAME_HEIGHT;
         canvas.width = GAME_WIDTH;
         $("#loading").hide();
         _this.renderer = new Client.Renderer(canvas, _this.game);
-        return socket.emit('playerJoin');
+        $("#gameCanvas").on('keydown', function(e) {
+          e.preventDefault();
+          if ((_this.player != null) && !_this.game.isKeyDown(_this.player.id, e.keyCode)) {
+            _this.game.keyDown(_this.player.id, e.keyCode);
+            return socket.emit("keyDown", {
+              playerId: _this.player.id,
+              keyCode: e.keyCode
+            });
+          }
+        });
+        $("#gameCanvas").on('keyup', function(e) {
+          e.preventDefault();
+          console.log("canvas key up");
+          if ((_this.player != null) && _this.game.isKeyDown(_this.player.id, e.keyCode)) {
+            _this.game.keyUp(_this.player.id, e.keyCode);
+            return socket.emit("keyUp", {
+              playerId: _this.player.id,
+              keyCode: e.keyCode
+            });
+          }
+        });
+        return $("#joinGame").click(function() {
+          return socket.emit('playerJoin', {
+            name: $("#playerName")[0].value
+          });
+        });
       });
       socket.on('newPlayer', function(player) {
         var newP;
@@ -42,26 +64,6 @@
       });
       socket.on('keyUp', function(data) {
         return _this.game.keyUp(data.playerId, data.keyCode);
-      });
-      $(window).keydown(function(e) {
-        e.preventDefault();
-        if (!_this.game.isKeyDown(_this.player.id, e.keyCode)) {
-          _this.game.keyDown(_this.player.id, e.keyCode);
-          return socket.emit("keyDown", {
-            playerId: _this.player.id,
-            keyCode: e.keyCode
-          });
-        }
-      });
-      $(window).keyup(function(e) {
-        e.preventDefault();
-        if ((_this.player != null) && _this.game.isKeyDown(_this.player.id, e.keyCode)) {
-          _this.game.keyUp(_this.player.id, e.keyCode);
-          return socket.emit("keyUp", {
-            playerId: _this.player.id,
-            keyCode: e.keyCode
-          });
-        }
       });
     }
 

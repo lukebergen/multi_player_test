@@ -30,26 +30,26 @@
       if (this.keys[37]) {
         if (this.dir === UP || this.dir === DOWN) {
           this.dir = LEFT;
+          this.turnPoints.push([this.x, this.y]);
         }
-        this.turnPoints.push([this.x, this.y]);
       }
       if (this.keys[39]) {
         if (this.dir === UP || this.dir === DOWN) {
           this.dir = RIGHT;
+          this.turnPoints.push([this.x, this.y]);
         }
-        this.turnPoints.push([this.x, this.y]);
       }
       if (this.keys[38]) {
         if (this.dir === LEFT || this.dir === RIGHT) {
           this.dir = UP;
+          this.turnPoints.push([this.x, this.y]);
         }
-        this.turnPoints.push([this.x, this.y]);
       }
       if (this.keys[40]) {
         if (this.dir === LEFT || this.dir === RIGHT) {
           this.dir = DOWN;
+          return this.turnPoints.push([this.x, this.y]);
         }
-        return this.turnPoints.push([this.x, this.y]);
       }
     };
 

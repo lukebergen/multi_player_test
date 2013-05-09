@@ -17,6 +17,8 @@
       this.isKeyDown = __bind(this.isKeyDown, this);
       this.keyUp = __bind(this.keyUp, this);
       this.keyDown = __bind(this.keyDown, this);
+      this.collision = __bind(this.collision, this);
+      this.collisionChecks = __bind(this.collisionChecks, this);
       this.update = __bind(this.update, this);
       g = typeof exports !== "undefined" && exports !== null ? global : window;
       g.UP = 0;
@@ -49,23 +51,81 @@
         player = _ref[_i];
         player.update(this);
       }
+      this.collisionChecks();
       del = Date.now() - startTime;
       if (del > 15) {
         return console.log("slow tick: " + this.ticks);
       }
     };
 
+    Game.prototype.collisionChecks = function() {
+      var c, i, otherPlayer, player, tpCount, _i, _len, _ref, _results;
+
+      _ref = this.players;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        player = _ref[_i];
+        if (player.x <= 0 || player.y <= 0 || player.x >= GAME_WIDTH || player.y >= GAME_HEIGHT) {
+          _results.push(this.collision(player, null));
+        } else {
+          _results.push((function() {
+            var _j, _len1, _ref1, _results1;
+
+            _ref1 = this.players;
+            _results1 = [];
+            for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+              otherPlayer = _ref1[_j];
+              _results1.push((function() {
+                var _k, _ref2, _results2;
+
+                _results2 = [];
+                for (i = _k = 1, _ref2 = otherPlayer.turnPoints.length; 1 <= _ref2 ? _k < _ref2 : _k > _ref2; i = 1 <= _ref2 ? ++_k : --_k) {
+                  if (!(i === otherPlayer.turnPoints.length - 1 && otherPlayer.id === player.id)) {
+                    tpCount = player.turnPoints.length;
+                    c = this.lineIntersect(player.x, player.y, player.turnPoints[tpCount - 1][0], player.turnPoints[tpCount - 1][1], otherPlayer.turnPoints[i - 1][0], otherPlayer.turnPoints[i - 1][1], otherPlayer.turnPoints[i][0], otherPlayer.turnPoints[i][1]);
+                    if (c) {
+                      _results2.push(this.collision(player, otherPlayer));
+                    } else {
+                      _results2.push(void 0);
+                    }
+                  } else {
+                    _results2.push(void 0);
+                  }
+                }
+                return _results2;
+              }).call(this));
+            }
+            return _results1;
+          }).call(this));
+        }
+      }
+      return _results;
+    };
+
+    Game.prototype.collision = function(player, otherPlayer) {
+      if (otherPlayer == null) {
+        otherPlayer = null;
+      }
+      console.log("collision");
+      this.players.splice(this.players.findIndex(player), 1);
+      return this.player = null;
+    };
+
     Game.prototype.keyDown = function(playerId, keyCode) {
-      return this.getPlayer(playerId).keyDown(keyCode);
+      var _ref;
+
+      return (_ref = this.getPlayer(playerId)) != null ? _ref.keyDown(keyCode) : void 0;
     };
 
     Game.prototype.keyUp = function(playerId, keyCode) {
+      var _ref;
+
       if (keyCode === 68) {
         if (typeof this.cheat === "function") {
           this.cheat();
         }
       }
-      return this.getPlayer(playerId).keyUp(keyCode);
+      return (_ref = this.getPlayer(playerId)) != null ? _ref.keyUp(keyCode) : void 0;
     };
 
     Game.prototype.isKeyDown = function(playerId, keyCode) {
@@ -110,6 +170,54 @@
         return p.id === id;
       });
       return index;
+    };
+
+    Game.prototype.lineIntersect = function(x1, y1, x2, y2, x3, y3, x4, y4) {
+      var x, y;
+
+      x = ((x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4)) / ((x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4));
+      y = ((x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4)) / ((x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4));
+      if (isNaN(x) || isNaN(y)) {
+        return false;
+      } else {
+        if (x1 >= x2) {
+          if (!(x2 <= x && x <= x1)) {
+            return false;
+          }
+        } else {
+          if (!(x1 <= x && x <= x2)) {
+            return false;
+          }
+        }
+        if (y1 >= y2) {
+          if (!(y2 <= y && y <= y1)) {
+            return false;
+          }
+        } else {
+          if (!(y1 <= y && y <= y2)) {
+            return false;
+          }
+        }
+        if (x3 >= x4) {
+          if (!(x4 <= x && x <= x3)) {
+            return false;
+          }
+        } else {
+          if (!(x3 <= x && x <= x4)) {
+            return false;
+          }
+        }
+        if (y3 >= y4) {
+          if (!(y4 <= y && y <= y3)) {
+            return false;
+          }
+        } else {
+          if (!(y3 <= y && y <= y4)) {
+            return false;
+          }
+        }
+      }
+      return true;
     };
 
     return Game;

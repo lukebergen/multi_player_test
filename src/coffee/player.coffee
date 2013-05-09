@@ -17,17 +17,21 @@ class @Player
 
   handleInput: =>
     if @keys[37]
-      @dir = LEFT if @dir == UP || @dir == DOWN
-      @turnPoints.push([@x, @y])
+      if @dir == UP || @dir == DOWN
+        @dir = LEFT
+        @turnPoints.push([@x, @y])
     if @keys[39]
-      @dir = RIGHT if @dir == UP || @dir == DOWN
-      @turnPoints.push([@x, @y])
+      if @dir == UP || @dir == DOWN
+        @dir = RIGHT
+        @turnPoints.push([@x, @y])
     if @keys[38]
-      @dir = UP if @dir == LEFT || @dir == RIGHT
-      @turnPoints.push([@x, @y])
+      if @dir == LEFT || @dir == RIGHT
+        @dir = UP
+        @turnPoints.push([@x, @y])
     if @keys[40]
-      @dir = DOWN if @dir == LEFT || @dir == RIGHT
-      @turnPoints.push([@x, @y])
+      if @dir == LEFT || @dir == RIGHT
+        @dir = DOWN
+        @turnPoints.push([@x, @y])
 
   keyDown: (code) =>
     @keys[code] = true
