@@ -17,39 +17,59 @@
       this.height = 10;
       this.speed = 1.0;
       this.keys = {};
+      this.previousKeys = {};
       this.turnPoints = [[this.x, this.y]];
       this.color = this.randColor();
     }
 
     Player.prototype.update = function(game) {
-      this.handleInput();
+      this.handleInput(game);
       return this.updateLocation();
     };
 
-    Player.prototype.handleInput = function() {
+    Player.prototype.handleInput = function(game) {
+      var turnedThisUpdate;
+
+      turnedThisUpdate = false;
       if (this.keys[37]) {
-        if (this.dir === UP || this.dir === DOWN) {
+        if ((this.dir === UP || this.dir === DOWN) && !this.previousKeys[37] && !turnedThisUpdate) {
           this.dir = LEFT;
           this.turnPoints.push([this.x, this.y]);
+          turnedThisUpdate = true;
         }
+        this.previousKeys[37] = true;
+      } else {
+        this.previousKeys[37] = false;
       }
       if (this.keys[39]) {
-        if (this.dir === UP || this.dir === DOWN) {
+        if ((this.dir === UP || this.dir === DOWN) && !this.previousKeys[39] && !turnedThisUpdate) {
           this.dir = RIGHT;
           this.turnPoints.push([this.x, this.y]);
+          turnedThisUpdate = true;
         }
+        this.previousKeys[39] = true;
+      } else {
+        this.previousKeys[39] = false;
       }
       if (this.keys[38]) {
-        if (this.dir === LEFT || this.dir === RIGHT) {
+        if ((this.dir === LEFT || this.dir === RIGHT) && !this.previousKeys[38] && !turnedThisUpdate) {
           this.dir = UP;
           this.turnPoints.push([this.x, this.y]);
+          turnedThisUpdate = true;
         }
+        this.previousKeys[38] = true;
+      } else {
+        this.previousKeys[38] = false;
       }
       if (this.keys[40]) {
-        if (this.dir === LEFT || this.dir === RIGHT) {
+        if ((this.dir === LEFT || this.dir === RIGHT) && !this.previousKeys[40] && !turnedThisUpdate) {
           this.dir = DOWN;
-          return this.turnPoints.push([this.x, this.y]);
+          this.turnPoints.push([this.x, this.y]);
+          turnedThisUpdate = true;
         }
+        return this.previousKeys[40] = true;
+      } else {
+        return this.previousKeys[40] = false;
       }
     };
 

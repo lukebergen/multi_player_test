@@ -7,13 +7,20 @@
       this.draw = __bind(this.draw, this);      this.canvas = canvas;
       this.ctx = this.canvas.getContext("2d");
       this.game = game;
-      setInterval(this.draw, 15);
+      this.renderStartTime = Date.now();
+      this.renderTicks = 0;
+      this.rendererStartTime = Date.now();
+      this.tickInterval = 16;
+      this.draw();
       this;
     }
 
     Renderer.prototype.draw = function() {
-      var e, id, player, s, _ref;
+      var id, nextInterval, player, s, _ref;
 
+      this.renderTicks++;
+      nextInterval = (this.rendererStartTime - Date.now()) + (this.renderTicks * this.tickInterval);
+      setTimeout(this.draw, nextInterval);
       s = Date.now();
       this.ctx.fillStyle = "rgb(0, 0, 0)";
       this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
@@ -22,8 +29,7 @@
         player = _ref[id];
         this.drawObject("Player", player);
       }
-      e = Date.now();
-      if (s - e > 15) {
+      if (s - Date.now() > this.tickInterval) {
         console.log("slow draw");
       }
       return this;

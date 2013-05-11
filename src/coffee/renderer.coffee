@@ -3,17 +3,23 @@ class Client.Renderer
     @canvas = canvas
     @ctx = @canvas.getContext("2d")
     @game = game
-    setInterval(@draw, 15)
+    @renderStartTime = Date.now()
+    @renderTicks = 0
+    @rendererStartTime = Date.now()
+    @tickInterval = 16
+    @draw()
     @
 
   draw: =>
+    @renderTicks++
+    nextInterval = (@rendererStartTime - Date.now()) + (@renderTicks * @tickInterval)
+    setTimeout(@draw, nextInterval)
     s = Date.now()
     @ctx.fillStyle = "rgb(0, 0, 0)"
     @ctx.fillRect(0, 0, @canvas.width, @canvas.height)
     for id, player of @game.players
       @drawObject("Player", player)
-    e = Date.now()
-    if (s - e > 15)
+    if (s - Date.now() > @tickInterval)
       console.log("slow draw")
     @
 

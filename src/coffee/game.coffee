@@ -9,22 +9,28 @@ class @Game
     g.GAME_HEIGHT = 600
 
     @ticks = initialData.ticks || 0
+    @startTime = initialData.startTime || Date.now()
     @keys = initialData.keys || {}
     @players = []
     for player in (initialData.players || [])
       newP = new Player()
       newP.syncTo(player)
       @players.push(newP)
-    setInterval(@update, 16)
+
+    @tickInterval = 16
+    @update()
     @
 
-  update: =>
-    startTime = Date.now()
+  update: (scheduleNext = true) =>
     @ticks++
+    if (scheduleNext)
+      nextInterval = (@startTime - Date.now()) + (@ticks * @tickInterval)
+      setTimeout(@update, nextInterval)
+    tickStartTime = Date.now()
     for player in @players
       player.update(@)
     @collisionChecks()
-    del = Date.now() - startTime
+    del = Date.now() - tickStartTime
     if (del > 15)
       console.log("slow tick: #{@ticks}")
 

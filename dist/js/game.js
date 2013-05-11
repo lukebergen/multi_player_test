@@ -28,6 +28,7 @@
       g.GAME_WIDTH = 600;
       g.GAME_HEIGHT = 600;
       this.ticks = initialData.ticks || 0;
+      this.startTime = initialData.startTime || Date.now();
       this.keys = initialData.keys || {};
       this.players = [];
       _ref = initialData.players || [];
@@ -37,22 +38,30 @@
         newP.syncTo(player);
         this.players.push(newP);
       }
-      setInterval(this.update, 16);
+      this.tickInterval = 16;
+      this.update();
       this;
     }
 
-    Game.prototype.update = function() {
-      var del, player, startTime, _i, _len, _ref;
+    Game.prototype.update = function(scheduleNext) {
+      var del, nextInterval, player, tickStartTime, _i, _len, _ref;
 
-      startTime = Date.now();
+      if (scheduleNext == null) {
+        scheduleNext = true;
+      }
       this.ticks++;
+      if (scheduleNext) {
+        nextInterval = (this.startTime - Date.now()) + (this.ticks * this.tickInterval);
+        setTimeout(this.update, nextInterval);
+      }
+      tickStartTime = Date.now();
       _ref = this.players;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         player = _ref[_i];
         player.update(this);
       }
       this.collisionChecks();
-      del = Date.now() - startTime;
+      del = Date.now() - tickStartTime;
       if (del > 15) {
         return console.log("slow tick: " + this.ticks);
       }

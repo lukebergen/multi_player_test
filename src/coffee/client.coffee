@@ -23,18 +23,18 @@ class @Client
         # only trigger a new event if the key isn't already down
         if @player? && not @game.isKeyDown(@player.id, e.keyCode)
           @game.keyDown(@player.id, e.keyCode)
-          socket.emit "keyDown",
-            playerId: @player.id
-            keyCode: e.keyCode
+          # socket.emit "keyDown",
+          #   playerId: @player.id
+          #   keyCode: e.keyCode
 
       $("#gameCanvas").on 'keyup', (e) =>
         e.preventDefault()
         # only trigger a new event if the key is currently down
         if @player? && @game.isKeyDown(@player.id, e.keyCode)
           @game.keyUp(@player.id, e.keyCode)
-          socket.emit "keyUp",
-            playerId: @player.id
-            keyCode: e.keyCode
+          # socket.emit "keyUp",
+          #   playerId: @player.id
+          #   keyCode: e.keyCode
 
       $("#joinGame").click ->
         socket.emit 'playerJoin',

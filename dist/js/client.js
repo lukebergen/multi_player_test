@@ -19,22 +19,13 @@
         $("#gameCanvas").on('keydown', function(e) {
           e.preventDefault();
           if ((_this.player != null) && !_this.game.isKeyDown(_this.player.id, e.keyCode)) {
-            _this.game.keyDown(_this.player.id, e.keyCode);
-            return socket.emit("keyDown", {
-              playerId: _this.player.id,
-              keyCode: e.keyCode
-            });
+            return _this.game.keyDown(_this.player.id, e.keyCode);
           }
         });
         $("#gameCanvas").on('keyup', function(e) {
           e.preventDefault();
-          console.log("canvas key up");
           if ((_this.player != null) && _this.game.isKeyDown(_this.player.id, e.keyCode)) {
-            _this.game.keyUp(_this.player.id, e.keyCode);
-            return socket.emit("keyUp", {
-              playerId: _this.player.id,
-              keyCode: e.keyCode
-            });
+            return _this.game.keyUp(_this.player.id, e.keyCode);
           }
         });
         return $("#joinGame").click(function() {
